@@ -1,22 +1,22 @@
-module "vpn_sg" {
-    source = "../../terraform-aws-securitygroup"
-    project_name = var.project_name
-    sg_name = "roboshop-vpn"
-    sg_description = "Allowing all ports from my home IP"
-    #sg_ingress_rules = var.sg_ingress_rules #create ingress rules seperately resource rules
-    vpc_id = data.aws_vpc.default.id
-    common_tags = var.common_tags
-}
+# module "vpn_sg" {
+#     source = "../../terraform-aws-securitygroup"
+#     project_name = var.project_name
+#     sg_name = "roboshop-vpn"
+#     sg_description = "Allowing all ports from my home IP"
+#     #sg_ingress_rules = var.sg_ingress_rules #create ingress rules seperately resource rules
+#     vpc_id = data.aws_vpc.default.id
+#     common_tags = var.common_tags
+# }
+# resource "aws_security_group_rule" "vpn" {
+#   type              = "ingress"
+#   from_port         = 0
+#   to_port           = 65535
+#   protocol          = "tcp"
+#   cidr_blocks       = ["${chomp(data.http.myip.body)}/32"] #allow all ports from my IP
+#   #ipv6_cidr_blocks  = [aws_vpc.example.ipv6_cidr_block]
+#   security_group_id = module.vpn_sg.security_group_id
+# }
 
-resource "aws_security_group_rule" "vpn" {
-  type              = "ingress"
-  from_port         = 0
-  to_port           = 65535
-  protocol          = "tcp"
-  cidr_blocks       = ["${chomp(data.http.myip.body)}/32"] #allow all ports from my IP
-  #ipv6_cidr_blocks  = [aws_vpc.example.ipv6_cidr_block]
-  security_group_id = module.vpn_sg.security_group_id
-}
 
 module "vpn_instance" {
   source  = "terraform-aws-modules/ec2-instance/aws"
