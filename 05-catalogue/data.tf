@@ -2,16 +2,16 @@ data "aws_ssm_parameter" "vpc_id" {
   name = "/${var.project_name}/${var.env}/vpc_id" #referring from 01-vpc/parameters.tf
 }
 
-data "aws_ssm_parameter" "vpn_sg_id" {
-  name = "/${var.project_name}/${var.env}/vpn_sg_id" #referring from 01-vpc/parameters.tf
+data "aws_ssm_parameter" "catalogue_sg_id" {
+  name = "/${var.project_name}/${var.env}/catalogue_sg_id" #referring from 01-vpc/parameters.tf
 }
 
-data "aws_ssm_parameter" "database_subnet_ids" {
-  name = "/${var.project_name}/${var.env}/database_subnet_ids" #referring from 01-vpc/parameters.tf
+data "aws_ssm_parameter" "private_subnet_ids" {
+  name = "/${var.project_name}/${var.env}/private_subnet_ids" #referring from 01-vpc/parameters.tf
 }
 
-data "aws_ssm_parameter" "mongodb_sg_id" {
-  name = "/${var.project_name}/${var.env}/mongodb_sg_id" #referring from 01-vpc/parameters.tf
+data "aws_ssm_parameter" "app_alb_listener_arn" {
+  name = "/${var.project_name}/${var.env}/app_alb_listener_arn" #referring from 01-vpc/parameters.tf
 }
 
 data "aws_ami" "devops_ami" {

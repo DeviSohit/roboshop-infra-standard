@@ -5,7 +5,7 @@ variable "project_name" {
 variable "common_tags" {
     default = {
         Project = "roboshop"
-        Component = "mongodb"
+        Component = "Catalogue"
         Environment = "DEV"
         Terraform = "true"
     }
@@ -15,6 +15,3 @@ variable "env" {
     default = "dev"
 }
 
-variable "zone_name" {
-    default = "devidevops.online"
-}

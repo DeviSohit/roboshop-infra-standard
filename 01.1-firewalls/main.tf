@@ -176,7 +176,7 @@ resource "aws_security_group_rule" "app_alb_web" {
   from_port         = 80
   to_port           = 80
   protocol          = "tcp"
-  source_security_group_id = module.web_sg.security_group_id
+  source_security_group_id = module.web_alb_sg.security_group_id
   #cidr_blocks       = ["${chomp(data.http.myip.body)}/32"] 
   #ipv6_cidr_blocks  = [aws_vpc.example.ipv6_cidr_block]
   security_group_id = module.app_alb_sg.security_group_id
