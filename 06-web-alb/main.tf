@@ -9,20 +9,73 @@ resource "aws_lb" "web_alb" {
   tags = var.common_tags
 }
 
-#this is expose to the public, so HTTPS:443 port
-resource "aws_lb_listener" "https" {
+#create certificate if you are giving listener on 443 port and do validation by giving domain name
+resource "aws_acm_certificate" "devidevops" {
+  domain_name       = "devidevops.online"
+  validation_method = "DNS"
+  tags = var.common_tags
+}
+
+data "aws_route53_zone" "devidevops" {
+  name         = "devidevops.online"
+  private_zone = false
+}
+
+resource "aws_route53_record" "devidevops" {
+  for_each = {
+    for dvo in aws_acm_certificate.devidevops.domain_validation_options : dvo.domain_name => {
+      name   = dvo.resource_record_name
+      record = dvo.resource_record_value
+      type   = dvo.resource_record_type
+    }
+  }
+
+  allow_overwrite = true
+  name            = each.value.name
+  records         = [each.value.record]
+  ttl             = 60
+  type            = each.value.type
+  zone_id         = data.aws_route53_zone.devidevops.zone_id
+}
+
+resource "aws_acm_certificate_validation" "devidevops" {
+  certificate_arn         = aws_acm_certificate.devidevops.arn
+  validation_record_fqdns = [for record in aws_route53_record.devidevops : record.fqdn]
+}
+
+# this is expose to the public, so HTTPS:443 port
+resource "aws_lb_listener" "front_end" {
   load_balancer_arn = aws_lb.web_alb.arn
   port              = "443"
   protocol          = "HTTPS"
+  ssl_policy        = "ELBSecurityPolicy-2016-08"
+  certificate_arn   = aws_acm_certificate.devidevops.arn
 
-  # This will add one listener on port no 443 and one default rule
   default_action {
     type = "fixed-response"
 
     fixed_response {
       content_type = "text/plain"
-      message_body = "This is the fixed response from WEB ALB"
+      message_body = "This is the fixed response from Web ALB HTTPS"
       status_code  = "200"
     }
   }
+}
+
+module "records" {
+  source  = "terraform-aws-modules/route53/aws//modules/records"
+  version = "~> 2.0"
+
+  zone_name = "devidevops.online"
+
+  records = [
+    {
+      name    = ""
+      type    = "A"
+      alias   = {
+        name    = aws_lb.web_alb.dns_name
+        zone_id = aws_lb.web_alb.zone_id
+      }
+    }
+  ]
 }

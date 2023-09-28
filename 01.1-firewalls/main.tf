@@ -176,7 +176,7 @@ resource "aws_security_group_rule" "app_alb_web" {
   from_port         = 80
   to_port           = 80
   protocol          = "tcp"
-  source_security_group_id = module.web_alb_sg.security_group_id
+  source_security_group_id = module.web_sg.security_group_id
   #cidr_blocks       = ["${chomp(data.http.myip.body)}/32"] 
   #ipv6_cidr_blocks  = [aws_vpc.example.ipv6_cidr_block]
   security_group_id = module.app_alb_sg.security_group_id
@@ -188,6 +188,19 @@ resource "aws_security_group_rule" "web_vpn" {
   description = "Allowing port number 80 from vpn"
   from_port         = 80
   to_port           = 80
+  protocol          = "tcp"
+  source_security_group_id = module.vpn_sg.security_group_id
+  #cidr_blocks       = ["${chomp(data.http.myip.body)}/32"] 
+  #ipv6_cidr_blocks  = [aws_vpc.example.ipv6_cidr_block]
+  security_group_id = module.web_sg.security_group_id
+}
+
+# Web should allow traffic from vpn on port no 22
+resource "aws_security_group_rule" "web_vpn_ssh" {
+  type              = "ingress"
+  description = "Allowing port number 22 from vpn"
+  from_port         = 22
+  to_port           = 22
   protocol          = "tcp"
   source_security_group_id = module.vpn_sg.security_group_id
   #cidr_blocks       = ["${chomp(data.http.myip.body)}/32"] 
@@ -214,6 +227,19 @@ resource "aws_security_group_rule" "web_alb_internet" {
   description = "Allowing port number 80 from internet"
   from_port         = 80
   to_port           = 80
+  protocol          = "tcp"
+  cidr_blocks = ["0.0.0.0/0"] #internet ip
+  #cidr_blocks       = ["${chomp(data.http.myip.body)}/32"] 
+  #ipv6_cidr_blocks  = [aws_vpc.example.ipv6_cidr_block]
+  security_group_id = module.web_alb_sg.security_group_id
+}
+
+# Public LB should allow traffic from internet on port no 443
+resource "aws_security_group_rule" "web_alb_internet_https" {
+  type              = "ingress"
+  description = "Allowing port number 443 from internet"
+  from_port         = 443
+  to_port           = 443
   protocol          = "tcp"
   cidr_blocks = ["0.0.0.0/0"] #internet ip
   #cidr_blocks       = ["${chomp(data.http.myip.body)}/32"] 
