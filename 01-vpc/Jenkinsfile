@@ -1,7 +1,7 @@
 pipeline {
     agent { node { label 'AGENT-1' } }
 
-    stages {
+     stages {
         stage('Init') {
             steps {
                 sh'''
@@ -23,10 +23,11 @@ pipeline {
             }
         }
         stage('Approve') {
-            steps {
+            steps{
                 input "Shall I apply?"
             }
         }
+
         stage('Apply') {
             steps{
                 
