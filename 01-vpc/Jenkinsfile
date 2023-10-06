@@ -14,16 +14,16 @@ pipeline {
                 '''
             }
         }
-        // stage('Plan') {
-        //     steps {
-        //         sh'''
-        //             cd 01-vpc
-        //             ls -lrt
-        //             pwd
-        //             terraform plan
-        //         '''
-        //     }
-        // }
+        stage('Plan') {
+            steps {
+                sh'''
+                    ls -ltr
+                    pwd
+                    cd 01-vpc
+                    terraform plan
+                '''
+            }
+        }
         
     }
 
