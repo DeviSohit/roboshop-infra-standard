@@ -6,13 +6,12 @@ pipeline {
     stages {
         stage('Init') {
             steps {
-                echo "for testing purpose"
-                // sh'''
-                //     cd 01-vpc
-                //     ls -lrt
-                //     pwd
-                //     terraform init
-                // '''
+                sh'''
+                    cd 01-vpc
+                    ls -lrt
+                    pwd
+                    terraform init
+                '''
             }
         }
         // stage('Plan') {
