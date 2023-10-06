@@ -18,7 +18,7 @@ pipeline {
         stage('Plan') {
             steps {
                 sh'''
-                    ls -lt
+                    ls -ltr
                     pwd
                     cd 01-vpc
                     terraform plan
