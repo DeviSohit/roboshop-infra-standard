@@ -1,5 +1,5 @@
 module "vpc" {
-    source = "../../terraform-aws-vpc-advanced"
+    source = "git::https://github.com/DeviSohit/terraform-aws-vpc-advanced.git"
     project_name = var.project_name #instead of hardcoding we are keeping in a variables.tf
     cidr_block = var.cidr_block
     common_tags = var.common_tags
